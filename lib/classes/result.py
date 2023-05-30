@@ -1,5 +1,6 @@
-from player import Player
-from game import Game
+#populating up here will cause circular import
+# from player import Player
+# from game import Game
 
 
 class Result:
@@ -10,8 +11,17 @@ class Result:
         self.player = player
         self.game = game
         self.score = score
+        #grabs results.all and adds self as a list item
+        Result.all.append(self)
 
+
+        #pass self bc IN RESULTS class
         player.results(self)
+        game.results(self)
+
+        #pass game because NOT IN GAME class so need to specify
+        player.games_played(game)
+        game.players(player)
 
     @property
     def score(self):
@@ -31,6 +41,7 @@ class Result:
     
     @player.setter
     def player(self, player):
+        from classes.player import Player
         if isinstance(player, Player):
             self._player = player
         else:
@@ -43,6 +54,7 @@ class Result:
     
     @game.setter
     def game(self, game):
+        from classes.game import Game
         if isinstance(game, Game):
             self._game = game
         else:
@@ -52,15 +64,3 @@ class Result:
 
 
 
-cards = Game("cards")
-val = Player("Val")
-
-result1 = Result(val, cards, 500)
-#print(result1.score)
-#tested @player.setter with:
-#result1 = Result(cards, val, 500)
-
-#tested @game.setter with:
-#result1 = Result(val, 500, cards)
-
-#print(val.results)
